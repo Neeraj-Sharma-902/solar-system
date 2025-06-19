@@ -25,5 +25,10 @@ pipeline {
                 sh 'npm audit --audit-level=critical'
             }
         }
+        stage("Unit Testing") {
+            steps {
+                sh 'npm test'
+            }
+        }
     }
 }
