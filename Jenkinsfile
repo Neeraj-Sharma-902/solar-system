@@ -9,6 +9,8 @@ pipeline {
     environment {
       MONGO_URI = "mongodb://mongo:27017/sample_mflix?authSource=admin"
       MONGO_DB_CREDS = credentials('mongo-db-creds')
+      MONGO_USERNAME = credentials('mongo-db-username')
+      MONGO_PASSWORD = credentials('mongo-db-password')
     }
 
     options {
@@ -42,9 +44,11 @@ pipeline {
                     echo "MONGO_CREDS - $MONGO_DB_CREDS"
                     echo "USERNAME - $MONGO_DB_CREDS_USR"
                     echo "PASSWORD - $MONGO_DB_CREDS_PSW"
+                    echo "USERNAME-TEXT - $MONGO_USERNAME"
+                    echo "PASSWORD-TEXT - $MONGO_PASSWORD"
                     npm test
                  '''
-                 junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-results.xml'
+
 //                 withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
 //                     sh 'npm test'
 //                 }
@@ -56,7 +60,19 @@ pipeline {
                     sh 'npm run coverage'
                 }
 
-                publishHTML([
+//                 withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+//                     catchError(buildResult: 'SUCCESS', message: 'OOPS! Coverage is less than 90%', stageResult: 'UNSTABLE') {
+//                         sh 'npm run coverage'
+//                     }
+//                 }
+            }
+        }
+    }
+    post{
+        always {
+            junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-results.xml'
+
+            publishHTML([
                     allowMissing: true,
                     alwaysLinkToLastBuild: true,
                     icon: '',
@@ -66,13 +82,6 @@ pipeline {
                     reportName: 'Coverage HTML Report',
                     reportTitles: ''
                 ])
-
-//                 withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-//                     catchError(buildResult: 'SUCCESS', message: 'OOPS! Coverage is less than 90%', stageResult: 'UNSTABLE') {
-//                         sh 'npm run coverage'
-//                     }
-//                 }
-            }
         }
     }
 }
