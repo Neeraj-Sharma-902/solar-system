@@ -33,7 +33,10 @@ pipeline {
         stage("Unit Testing") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_USERNAME', usernameVariable: 'MONGO_PASSWORD')]) {
-                    sh 'npm test'
+                    sh '''
+                        sleep 3600
+                        npm test
+                    '''
                 }
             }
         }
