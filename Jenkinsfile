@@ -11,6 +11,7 @@ pipeline {
       MONGO_DB_CREDS = credentials('mongo-db-creds')
       MONGO_USERNAME = credentials('mongo-db-username')
       MONGO_PASSWORD = credentials('mongo-db-password')
+      SONAR_SCANNER_HOME = tool 'sonarqube-scanner 7.1.0'
     }
 
     options {
@@ -65,6 +66,17 @@ pipeline {
 //                         sh 'npm run coverage'
 //                     }
 //                 }
+            }
+        }
+        stage("SAST - Sonarqube Analysis") {
+            steps {
+                sh '''
+                    $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                      -Dsonar.projectKey=solar-system-project \
+                      -Dsonar.sources=app.js \
+                      -Dsonar.host.url=http://13.233.15.158:9000 \
+                      -Dsonar.token=sqp_d57ffb2617601aae766924583633b6e96b867e63
+                '''
             }
         }
     }
