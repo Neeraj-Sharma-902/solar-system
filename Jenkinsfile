@@ -42,6 +42,7 @@ pipeline {
                     echo "MONGO_CREDS - $MONGO_DB_CREDS"
                     echo "USERNAME - $MONGO_DB_CREDS_USR"
                     echo "PASSWORD - $MONGO_DB_CREDS_PSW"
+                    npm test
                  '''
                  junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-results.xml'
 //                 withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
