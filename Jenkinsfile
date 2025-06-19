@@ -40,17 +40,17 @@ pipeline {
         stage("Unit Testing") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    sh '''
-                        npm test
-                    '''
-
-                    junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-results.xml'
+                    sh 'npm test'
                 }
+
+                 junit allowEmptyResults: true, stdioRetention: 'ALL', testResults: 'test-results.xml'
             }
         }
         stage("Code Coverage") {
             steps {
-                sh 'npm run coverage'
+                withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                    sh 'npm run coverage'
+                }
             }
         }
     }
