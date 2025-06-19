@@ -21,7 +21,6 @@ pipeline {
         stage("Check Node Version") {
             steps {
                 sh '''
-                    sleep 100s
                     node -v
                     npm -v
                 '''
