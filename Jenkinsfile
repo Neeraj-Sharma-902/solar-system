@@ -6,6 +6,11 @@ pipeline {
       nodejs 'NodeJS 24.0.0'
     }
 
+    environment {
+      MONGO_URI = "mongodb://mongo:27017/sample_mflix?authSource=admin"
+    }
+
+
     stages {
         stage("Check Node Version") {
             steps {
@@ -27,7 +32,9 @@ pipeline {
         }
         stage("Unit Testing") {
             steps {
-                sh 'npm test'
+                withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_USERNAME', usernameVariable: 'MONGO_PASSWORD')]) {
+                    sh 'npm test'
+                }
             }
         }
     }
