@@ -10,6 +10,12 @@ pipeline {
       MONGO_URI = "mongodb://mongo:27017/sample_mflix?authSource=admin"
     }
 
+    options {
+      disableConcurrentBuilds abortPrevious: true
+      disableResume()
+    }
+
+
 
     stages {
         stage("Check Node Version") {
