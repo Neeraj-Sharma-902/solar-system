@@ -49,8 +49,21 @@ pipeline {
         stage("Code Coverage") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-db-creds', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    sh 'npm run coverage'
+                    catchError(buildResult: 'SUCCESS', message: 'OOPS! Coverage is less than 90%', stageResult: 'UNSTABLE') {
+                        sh 'npm run coverage'
+                    }
                 }
+
+                publishHTML([
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    icon: '',
+                    keepAll: true,
+                    reportDir: 'coverage/lcov-report/',
+                    reportFiles: 'index.html',
+                    reportName: 'Coverage HTML Report',
+                    reportTitles: ''
+                ])
             }
         }
     }
