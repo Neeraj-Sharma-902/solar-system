@@ -74,7 +74,7 @@ pipeline {
                     $SONAR_SCANNER_HOME/bin/sonar-scanner \
                       -Dsonar.projectKey=solar-system-project \
                       -Dsonar.sources=app.js \
-                      -Dsonar.host.url=http://13.233.15.158:9000 \
+                      -Dsonar.host.url=http://sonarqube:9000 \
                       -Dsonar.token=sqp_d57ffb2617601aae766924583633b6e96b867e63
                 '''
             }
