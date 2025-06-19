@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        MONGO_URI = "mongodb://localhost:27017/sample_mflix?authSource=admin"
+        MONGO_URI = "mongodb://mongo:27017/sample_mflix?authSource=admin"
     }
 
     stages {
