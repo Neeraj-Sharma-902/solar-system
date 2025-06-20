@@ -70,14 +70,18 @@ pipeline {
         }
         stage("SAST - Sonarqube Analysis") {
             steps {
-                sh '''
-                    $SONAR_SCANNER_HOME/bin/sonar-scanner \
-                      -Dsonar.projectKey=solar-system-project \
-                      -Dsonar.sources=app.js \
-                      -Dsonar.host.url=http://sonarqube:9000 \
-                      -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-                      -Dsonar.token=sqp_d57ffb2617601aae766924583633b6e96b867e63
-                '''
+                timeout(time: 300, unit: 'SECONDS') {
+                    withSonarQubeEnv(installationName: 'sonarqube-server') {
+                       sh '''
+                            $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                              -Dsonar.projectKey=solar-system-project \
+                              -Dsonar.sources=app.js \
+                              -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+                        '''
+                    }
+
+                    waitForQualityGate abortPipeline: true
+               }
             }
         }
     }
